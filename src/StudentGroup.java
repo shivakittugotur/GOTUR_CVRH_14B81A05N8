@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -29,14 +30,10 @@ public class StudentGroup implements StudentArrayOperation {
 	@Override
 	public Student[] getStudents() {
 		// Add your implementation here
-		try{
+	
 		if(students==null)
 			throw new IllegalArgumentException();
 		 
-			
-		}catch(IllegalArgumentException e){
-			
-		}
 		return students;
 	}
 
@@ -46,13 +43,8 @@ public class StudentGroup implements StudentArrayOperation {
 		
 			if(students==null)
 				throw new IllegalArgumentException();
-			count=0;
-				for(Student s:students){
-					students[count++]=s;
-				}
-			
-		
-		
+			count=students.length;
+				this.students=Arrays.copyOf(students, count);
 	}
 
 	@Override
@@ -70,16 +62,20 @@ public class StudentGroup implements StudentArrayOperation {
 	@Override
 	public void setStudent(Student student, int index) {
 		// Add your implementation here
-		try{
+		
 			if(index<0||index>=len)
 				throw new IllegalArgumentException();
-			if(students[index]==null)
+			if(students[index]==null){
 				(this.count)++;
 			students[index]=student;
-			
-			}catch(IllegalArgumentException e){
-				
+			}else{
+				Student s[]=Arrays.copyOfRange(students, index, len-1);
+				s[index]=student;
+				int j=0;
+				for(int i=index+1;i<len;i++)
+					s[i]=s[j++];
 			}
+		
 	}		
 
 	@Override
@@ -118,114 +114,113 @@ public class StudentGroup implements StudentArrayOperation {
 				for(int i=len-1;i>=0;i--){
 					 if(students[i]==null){
 						 continue;
+					 }else{
+					
+					 students[i+1]=student;
+					break;
+					
 					 }
-					 s=students[i];
-					 students[i]=student;
-					 student=s;
 					 
 				}
+				count++;
 			}
 	}
 
 	@Override
 	public void add(Student student, int index) {
 		// Add your implementation here
-		try{
+		
 			if(student==null||index<0||index>len-1)
-				throw new IllegalArgumentException("illegal");
-			if(index>=count)
+				throw new IllegalArgumentException();
 			 count++;
-			for(int i=count-1;i>index;i--)
-				 students[i]=students[i-1];
-			
-			 students[index]=student;
-				
-			}catch(IllegalArgumentException e){
-				
+			int i;
+			for(i=index;i<len;i++){
+				if(students[i]==null)
+					break;
+				Student s=students[i];
+				students[i]=student;
+				student=s;
 			}
-			
+				 students[i]=student;
+	
 	}
 
 	@Override
 	public void remove(int index) {
 		// Add your implementation here
-		try{
+		
 			if(index<0||index>len-1)
 				throw new IllegalArgumentException();
-			for(int i=index;i<count-1;i++){
-				students[i]=students[i+1];
-			}
+			students[index]=null;
 			count--;
-			}catch(IllegalArgumentException e){
-				
-			}
+			
 	}
 
 	@Override
 	public void remove(Student student) {
 		// Add your implementation here
-		try{
+		
 			if(student==null)
 				throw new IllegalArgumentException();
 			for(int i=0;i<count-1;i++){
 				if(students[i].equals(student)){
-					for(int j=i;j<count-1;j++){
-						students[j]=students[j+1];
+					
+					for(int k=i;k<len-1&&students[k]!=null;k++){
+						students[k]=students[k+1];
 					}
+					count--;
 					}
 				}
 			
-			count--;
-			}catch(IllegalArgumentException e){
-				
-			}
 	}
 
 	@Override
 	public void removeFromIndex(int index) {
 		// Add your implementation here
-		try{
+		
 			if(index<0||index>len-1)
 				throw new IllegalArgumentException();
-			count=index+1;
-			}catch(IllegalArgumentException e){
-				
+			for(int i=index;i<len;i++){
+				if(students[i]!=null){
+					students[i]=null;
+					count--;
+				}
 			}
+			
 	}
 
 	@Override
 	public void removeFromElement(Student student) {
 		// Add your implementation here
-		try{
+		
 			if(student==null)
 				throw new IllegalArgumentException();
-			for(int i=0;i<count-1;i++){
+			for(int i=0;i<len;i++){
 				if(students[i].equals(student)){
-					count=i+1;
+					for(int k=i;k<len;k++){
+						if(students[k]!=null){
+						students[k]=null;
+						count--;
+						}
+					}
+					break;
 					}
 				}
 			
-			
-			}catch(IllegalArgumentException e){
-				
-			}
 	}
 
 	@Override
 	public void removeToIndex(int index) {
 		// Add your implementation here
-		try{
+		
 			if(index<0||index>len-1)
 				throw new IllegalArgumentException();
 			int j=index;
-			for(int i=0;i<len-1-index;i++){
+			for(int i=0;i<index;i++){
 				students[i++]=students[j++];
 			}
 			count-=index;
-			}catch(IllegalArgumentException e){
-				
-			}
-		
+			
 	}
 
 	@Override
@@ -252,6 +247,8 @@ public class StudentGroup implements StudentArrayOperation {
 	@Override
 	public void bubbleSort() {
 		// Add your implementation here
+		int i,j;
+		
 	}
 
 	@Override
